@@ -1,6 +1,6 @@
 # 🧠 MindVault
 
-MindVault is a Personal Memory Operating System built using the MERN stack.
+MindVault is a Personal Memory Operating System built using the MERN stack.It stores and analyze our memories for us .
 
 ## 🚀 Features (V1)
 - User Authentication (JWT)
