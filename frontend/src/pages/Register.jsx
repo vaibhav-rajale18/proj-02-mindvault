@@ -43,8 +43,8 @@ const Register = () => {
   };
 
   return (
-    <div className="container">
-      <div className="card">
+    <div className="auth-page">
+      <div className="container auth-card card">
         <h2>Register</h2>
         {error && <p className="error">{error}</p>}
         <form onSubmit={handleSubmit}>

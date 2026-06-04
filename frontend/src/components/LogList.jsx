@@ -10,9 +10,9 @@ const LogList = ({ entries, onDelete }) => {
   }
 
   return (
-    <div>
+    <div className="log-list">
       {entries.map((entry) => (
-        <div className="card" key={entry._id}>
+        <div className="log-card" key={entry._id}>
           <div className="entry-date">
             {new Date(entry.createdAt).toLocaleString()}
           </div>

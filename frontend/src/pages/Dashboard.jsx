@@ -55,17 +55,35 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="container">
-      <Navbar />
-      {error && <p className="error">{error}</p>}
-      <LogForm onSave={handleSave} />
-      {loading ? (
-        <div className="card">
-          <p className="message">Loading your logs...</p>
+    <div className="dashboard-page">
+      <div className="container">
+        <Navbar />
+        <div className="dashboard-hero card">
+          <div className="hero-copy">
+            <p className="eyebrow">Daily reflection</p>
+            <h1 className="primary-heading">
+              A calm place to write, remember, and grow.
+            </h1>
+            <p>
+              Capture your thoughts with a warm writing experience, then return
+              to your personal MindVault anytime.
+            </p>
+          </div>
         </div>
-      ) : (
-        <LogList entries={entries} onDelete={handleDelete} />
-      )}
+        {error && <p className="error">{error}</p>}
+        <div className="dashboard-grid">
+          <LogForm onSave={handleSave} />
+          {loading ? (
+            <div className="card">
+              <p className="message">Loading your logs...</p>
+            </div>
+          ) : (
+            <div className="log-list">
+              <LogList entries={entries} onDelete={handleDelete} />
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
