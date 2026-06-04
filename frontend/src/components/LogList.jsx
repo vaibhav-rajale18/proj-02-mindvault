@@ -21,20 +21,24 @@ const LogList = ({ entries, onDelete }) => {
           key={entry._id}
           onClick={() => navigate(`/log/${entry._id}`)}
         >
-          <div className="entry-date">
-            {new Date(entry.createdAt).toLocaleString()}
-          </div>
-          <h3>{entry.title}</h3>
-          <div className="actions">
-            <button
-              className="danger"
-              onClick={(event) => {
-                event.stopPropagation();
-                onDelete(entry._id);
-              }}
-            >
-              Delete
-            </button>
+          <div className="log-card-header">
+            <div>
+              <div className="entry-date">
+                {new Date(entry.createdAt).toLocaleString()}
+              </div>
+              <h3>{entry.title}</h3>
+            </div>
+            <div className="actions">
+              <button
+                className="danger"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  onDelete(entry._id);
+                }}
+              >
+                Delete
+              </button>
+            </div>
           </div>
         </div>
       ))}
