@@ -69,6 +69,68 @@ const deleteEntry = async (req, res) => {
   }
 };
 
+const getEntry = async (req, res) => {
+  try {
+    const entry = await Entry.findById(req.params.id);
+
+    if (!entry) {
+      return res.status(404).json({
+        message: "Entry not found",
+      });
+    }
+
+    if (entry.userId.toString() !== req.user) {
+      return res.status(403).json({
+        message: "Not authorized to view this entry",
+      });
+    }
+
+    res.status(200).json(entry);
+  } catch (error) {
+    res.status(500).json({
+      message: "Server Error",
+      error: error.message,
+    });
+  }
+};
+
+const updateEntry = async (req, res) => {
+  try {
+    const entry = await Entry.findById(req.params.id);
+
+    if (!entry) {
+      return res.status(404).json({
+        message: "Entry not found",
+      });
+    }
+
+    if (entry.userId.toString() !== req.user) {
+      return res.status(403).json({
+        message: "Not authorized to update this entry",
+      });
+    }
+
+    const { title, content } = req.body;
+
+    if (!title || !content) {
+      return res.status(400).json({
+        message: "Title and content are required",
+      });
+    }
+
+    entry.title = title;
+    entry.content = content;
+    await entry.save();
+
+    res.status(200).json(entry);
+  } catch (error) {
+    res.status(500).json({
+      message: "Server Error",
+      error: error.message,
+    });
+  }
+};
+
 const searchEntries = async (req, res) => {
   try {
     const { q } = req.query;
@@ -99,5 +161,7 @@ module.exports = {
   createEntry,
   getEntries,
   deleteEntry,
+  getEntry,
+  updateEntry,
   searchEntries,
 };
