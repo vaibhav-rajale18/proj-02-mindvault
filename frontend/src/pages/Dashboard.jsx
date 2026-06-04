@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import Navbar from "../components/Navbar";
@@ -8,6 +8,7 @@ import LogList from "../components/LogList";
 const Dashboard = () => {
   const navigate = useNavigate();
   const [entries, setEntries] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const token = localStorage.getItem("mindvault_token");
@@ -31,6 +32,18 @@ const Dashboard = () => {
 
     loadEntries();
   }, [navigate, token]);
+
+  const filteredEntries = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return entries;
+
+    return entries.filter((entry) => {
+      return (
+        entry.title.toLowerCase().includes(query) ||
+        entry.content.toLowerCase().includes(query)
+      );
+    });
+  }, [entries, searchQuery]);
 
   const handleSave = async (entryData) => {
     try {
@@ -60,35 +73,47 @@ const Dashboard = () => {
       <div className="container dashboard-shell">
         {error && <p className="error page-error">{error}</p>}
         <div className="dashboard-grid">
-          <section className="editor-panel card">
-            <div className="hero-copy">
-              <p className="eyebrow">Daily reflection</p>
-              <h1 className="primary-heading">
-                A calm place to write, remember, and grow.
-              </h1>
-              <p>
-                Capture your thoughts with a warm writing experience, then
-                return to your personal MindVault anytime.
-              </p>
+          <section className="editor-panel">
+            <div className="editor-header">
+              <div>
+                <p className="eyebrow">Reflect and plan</p>
+                <h1 className="primary-heading">
+                  Build clarity with disciplined daily logs.
+                </h1>
+                <p className="panel-copy">
+                  Capture your study insights, maintain focus, and review your
+                  progress without distraction.
+                </p>
+              </div>
             </div>
             <LogForm onSave={handleSave} />
           </section>
 
           <section className="entries-panel card">
-            <div className="entries-header">
-              <p className="eyebrow">Recent reflections</p>
-              <h2>My Journal</h2>
-              <p className="message subtle">
-                Scroll only this panel to browse your latest entries.
-              </p>
+            <div className="entries-panel-top">
+              <div>
+                <p className="eyebrow">My Journals</p>
+                <h2>Recent entries</h2>
+              </div>
+              <div className="search-box">
+                <label htmlFor="search">Search Logs</label>
+                <input
+                  id="search"
+                  type="search"
+                  value={searchQuery}
+                  onChange={(event) => setSearchQuery(event.target.value)}
+                  placeholder="Search by title or text"
+                />
+              </div>
             </div>
+
             {loading ? (
               <div className="empty-state">
-                <p className="message">Loading your logs...</p>
+                <p className="message">Loading your logs…</p>
               </div>
             ) : (
               <div className="entry-scroll">
-                <LogList entries={entries} onDelete={handleDelete} />
+                <LogList entries={filteredEntries} onDelete={handleDelete} />
               </div>
             )}
           </section>

@@ -20,10 +20,10 @@ const LogForm = ({ onSave }) => {
   };
 
   return (
-    <div className="card">
+    <div className="card create-form-card">
       <h2>Create New Log</h2>
       {error && <p className="error">{error}</p>}
-      <form onSubmit={handleSubmit}>
+      <form className="create-form" onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="title">Title</label>
           <input
@@ -38,7 +38,7 @@ const LogForm = ({ onSave }) => {
           <label htmlFor="content">Daily Writing</label>
           <textarea
             id="content"
-            rows="6"
+            rows="4"
             value={content}
             onChange={(event) => setContent(event.target.value)}
             placeholder="Capture your thoughts and memories."

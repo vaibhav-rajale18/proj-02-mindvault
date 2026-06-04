@@ -66,24 +66,22 @@ const LogDetails = () => {
   };
 
   return (
-    <div className="auth-page">
-      <div className="container auth-card card">
-        <Navbar />
+    <div className="details-page">
+      <Navbar />
+      <div className="container details-shell">
         {loading ? (
           <div className="empty-state">
             <p className="message">Loading entry...</p>
           </div>
         ) : entry ? (
-          <div>
-            {error && <p className="error">{error}</p>}
-            <div className="entry-details-header">
-              <div>
-                <p className="eyebrow">Journal entry</p>
-                <h2>{entry.title}</h2>
-                <p className="entry-date">
-                  {new Date(entry.createdAt).toLocaleString()}
-                </p>
-              </div>
+          <div className="details-card card">
+            <div className="detail-action-row">
+              <button
+                className="secondary"
+                onClick={() => navigate("/dashboard")}
+              >
+                Back to Journal
+              </button>
               <div className="detail-actions">
                 <button
                   className="secondary"
@@ -94,6 +92,18 @@ const LogDetails = () => {
                 <button className="danger" onClick={handleDelete}>
                   Delete
                 </button>
+              </div>
+            </div>
+
+            {error && <p className="error">{error}</p>}
+
+            <div className="entry-details-header">
+              <div>
+                <p className="eyebrow">Journal entry</p>
+                <h2>{entry.title}</h2>
+                <p className="entry-date detail-date">
+                  {new Date(entry.createdAt).toLocaleString()}
+                </p>
               </div>
             </div>
 
@@ -111,7 +121,7 @@ const LogDetails = () => {
                   <label htmlFor="detail-content">Content</label>
                   <textarea
                     id="detail-content"
-                    rows="10"
+                    rows="12"
                     value={content}
                     onChange={(event) => setContent(event.target.value)}
                   />
@@ -121,9 +131,9 @@ const LogDetails = () => {
                 </button>
               </form>
             ) : (
-              <div className="entry-body">
+              <article className="entry-body detail-body">
                 <p className="entry-content">{entry.content}</p>
-              </div>
+              </article>
             )}
           </div>
         ) : (

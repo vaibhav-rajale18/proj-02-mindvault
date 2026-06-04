@@ -9,12 +9,17 @@ const Navbar = () => {
   };
 
   return (
-    <div className="navbar">
-      <div className="navbar-title">MindVault</div>
+    <header className="navbar">
+      <div className="navbar-brand">
+        <div className="navbar-title">MindVault</div>
+        <p className="navbar-subtitle">
+          A focused journal for disciplined preparation.
+        </p>
+      </div>
       <button className="secondary" onClick={handleLogout}>
         Logout
       </button>
-    </div>
+    </header>
   );
 };
 
