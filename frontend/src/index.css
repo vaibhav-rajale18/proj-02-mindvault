@@ -143,7 +143,13 @@ button.danger {
   justify-content: space-between;
   align-items: center;
   gap: 16px;
-  padding: 24px 0;
+  padding: 18px 0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(7, 12, 22, 0.92);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.12);
 }
 
 .navbar-title {
@@ -179,6 +185,80 @@ button.danger {
 .error {
   color: #fb7185;
   margin-bottom: 18px;
+}
+
+.page-error {
+  margin: 18px 0 0;
+}
+
+.dashboard-page {
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.dashboard-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 84px);
+  padding: 24px 0 30px;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: minmax(360px, 1.1fr) minmax(420px, 0.9fr);
+  gap: 26px;
+  align-items: start;
+  min-height: calc(100vh - 158px);
+}
+
+.editor-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100%;
+}
+
+.entries-panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.entries-header {
+  margin-bottom: 18px;
+}
+
+.entries-header h2 {
+  margin: 8px 0 0;
+  font-size: 1.35rem;
+}
+
+.entry-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 8px;
+  display: grid;
+  gap: 18px;
+}
+
+.entry-scroll::-webkit-scrollbar {
+  width: 10px;
+}
+
+.entry-scroll::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 999px;
+}
+
+.entry-scroll::-webkit-scrollbar-thumb {
+  background: rgba(139, 92, 246, 0.34);
+  border-radius: 999px;
+}
+
+.empty-state {
+  min-height: 220px;
+  display: grid;
+  place-items: center;
 }
 
 .auth-page {
@@ -245,16 +325,7 @@ button.danger {
 }
 
 .dashboard-hero {
-  margin-bottom: 24px;
-  padding: 28px;
-  border-radius: 30px;
-  background: linear-gradient(
-    180deg,
-    rgba(139, 92, 246, 0.16),
-    rgba(15, 23, 42, 0.9)
-  );
-  border: 1px solid rgba(139, 92, 246, 0.12);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  display: none;
 }
 
 .dashboard-grid {
@@ -275,12 +346,18 @@ button.danger {
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.16);
   transition:
     transform 0.2s ease,
-    border-color 0.2s ease;
+    border-color 0.2s ease,
+    background-color 0.2s ease;
 }
 
-.log-card:hover {
+.log-card.clickable {
+  cursor: pointer;
+}
+
+.log-card.clickable:hover {
   transform: translateY(-2px);
   border-color: rgba(139, 92, 246, 0.2);
+  background: rgba(22, 29, 47, 0.96);
 }
 
 .log-card h3 {
@@ -295,6 +372,36 @@ button.danger {
 
 .primary-heading {
   margin: 0;
+}
+
+.entry-details-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.detail-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.detail-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.entry-body {
+  white-space: pre-wrap;
+  line-height: 1.85;
+  color: #e2e8f0;
+}
+
+.auth-card {
+  width: min(760px, calc(100% - 32px));
 }
 
 @media (max-width: 900px) {

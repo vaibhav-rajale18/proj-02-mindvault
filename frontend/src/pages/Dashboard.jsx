@@ -56,32 +56,42 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-page">
-      <div className="container">
-        <Navbar />
-        <div className="dashboard-hero card">
-          <div className="hero-copy">
-            <p className="eyebrow">Daily reflection</p>
-            <h1 className="primary-heading">
-              A calm place to write, remember, and grow.
-            </h1>
-            <p>
-              Capture your thoughts with a warm writing experience, then return
-              to your personal MindVault anytime.
-            </p>
-          </div>
-        </div>
-        {error && <p className="error">{error}</p>}
+      <Navbar />
+      <div className="container dashboard-shell">
+        {error && <p className="error page-error">{error}</p>}
         <div className="dashboard-grid">
-          <LogForm onSave={handleSave} />
-          {loading ? (
-            <div className="card">
-              <p className="message">Loading your logs...</p>
+          <section className="editor-panel card">
+            <div className="hero-copy">
+              <p className="eyebrow">Daily reflection</p>
+              <h1 className="primary-heading">
+                A calm place to write, remember, and grow.
+              </h1>
+              <p>
+                Capture your thoughts with a warm writing experience, then
+                return to your personal MindVault anytime.
+              </p>
             </div>
-          ) : (
-            <div className="log-list">
-              <LogList entries={entries} onDelete={handleDelete} />
+            <LogForm onSave={handleSave} />
+          </section>
+
+          <section className="entries-panel card">
+            <div className="entries-header">
+              <p className="eyebrow">Recent reflections</p>
+              <h2>My Journal</h2>
+              <p className="message subtle">
+                Scroll only this panel to browse your latest entries.
+              </p>
             </div>
-          )}
+            {loading ? (
+              <div className="empty-state">
+                <p className="message">Loading your logs...</p>
+              </div>
+            ) : (
+              <div className="entry-scroll">
+                <LogList entries={entries} onDelete={handleDelete} />
+              </div>
+            )}
+          </section>
         </div>
       </div>
     </div>
