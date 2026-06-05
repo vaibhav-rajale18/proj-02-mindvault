@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { moodOptions, normalizeTags } from "../utils/journal";
 
 const LogForm = ({ onSave }) => {
@@ -8,6 +8,9 @@ const LogForm = ({ onSave }) => {
   const [tags, setTags] = useState([]);
   const [tagInput, setTagInput] = useState("");
   const [error, setError] = useState("");
+  const [draftSaved, setDraftSaved] = useState(false);
+  const [preview, setPreview] = useState(false);
+  const saveTimer = useRef(null);
 
   const addTags = (raw) => {
     const values = String(raw)
@@ -45,6 +48,26 @@ const LogForm = ({ onSave }) => {
     }
   };
 
+  // Basic markdown -> HTML (very lightweight, safe-ish for small preview)
+  const markdownToHtml = (text) => {
+    if (!text) return "";
+    let html = text
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+    // headings
+    html = html.replace(/^### (.*$)/gim, "<h3>$1</h3>");
+    html = html.replace(/^## (.*$)/gim, "<h2>$1</h2>");
+    html = html.replace(/^# (.*$)/gim, "<h1>$1</h1>");
+    // bold
+    html = html.replace(/\*\*(.*?)\*\*/gim, "<strong>$1</strong>");
+    // italic
+    html = html.replace(/\*(.*?)\*/gim, "<em>$1</em>");
+    // line breaks
+    html = html.replace(/\n/g, "<br />");
+    return html;
+  };
+
   const removeTag = (tagToRemove) => {
     setTags((currentTags) =>
       currentTags.filter(
@@ -75,6 +98,41 @@ const LogForm = ({ onSave }) => {
     setMood("thoughtful");
   };
 
+  // Autosave draft to localStorage (debounced)
+  useEffect(() => {
+    const draft = { title, content, mood, tags };
+    if (saveTimer.current) clearTimeout(saveTimer.current);
+    saveTimer.current = setTimeout(() => {
+      try {
+        localStorage.setItem("mindvault_draft", JSON.stringify(draft));
+        setDraftSaved(true);
+        setTimeout(() => setDraftSaved(false), 1200);
+      } catch (e) {
+        // ignore
+      }
+    }, 600);
+
+    return () => {
+      if (saveTimer.current) clearTimeout(saveTimer.current);
+    };
+  }, [title, content, mood, tags]);
+
+  // Load draft on mount
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("mindvault_draft");
+      if (raw) {
+        const d = JSON.parse(raw);
+        if (d.title) setTitle(d.title);
+        if (d.content) setContent(d.content);
+        if (d.mood) setMood(d.mood);
+        if (d.tags) setTags(d.tags);
+      }
+    } catch (e) {
+      // ignore
+    }
+  }, []);
+
   return (
     <div className="card create-form-card">
       <h2>Create New Log</h2>
@@ -92,15 +150,37 @@ const LogForm = ({ onSave }) => {
           />
         </div>
 
+        <div className="form-actions-row">
+          <div className="preview-toggle">
+            <button
+              type="button"
+              className="secondary"
+              onClick={() => setPreview((p) => !p)}
+            >
+              {preview ? "Edit" : "Preview"}
+            </button>
+          </div>
+          <div className="draft-indicator">
+            {draftSaved && <span className="note">Draft saved</span>}
+          </div>
+        </div>
+
         <div className="form-group">
           <label htmlFor="content">Daily Writing</label>
-          <textarea
-            id="content"
-            rows="6"
-            value={content}
-            onChange={(event) => setContent(event.target.value)}
-            placeholder="Capture your thoughts and memories."
-          />
+          {preview ? (
+            <div
+              className="markdown-preview card"
+              dangerouslySetInnerHTML={{ __html: markdownToHtml(content) }}
+            />
+          ) : (
+            <textarea
+              id="content"
+              rows="6"
+              value={content}
+              onChange={(event) => setContent(event.target.value)}
+              placeholder="Capture your thoughts and memories."
+            />
+          )}
         </div>
 
         <div className="form-group mood-group">

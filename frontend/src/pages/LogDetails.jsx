@@ -19,6 +19,7 @@ const LogDetails = () => {
   const [tags, setTags] = useState([]);
   const [tagInput, setTagInput] = useState("");
   const [saving, setSaving] = useState(false);
+  const [preview, setPreview] = useState(false);
 
   const handleAuthError = (loadError) => {
     if (
@@ -155,6 +156,21 @@ const LogDetails = () => {
   const activeMood = moodMap[entry?.mood] || moodMap.thoughtful;
   const entryTags = normalizeTags(entry?.tags);
 
+  const markdownToHtml = (text) => {
+    if (!text) return "";
+    let html = text
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+    html = html.replace(/^### (.*$)/gim, "<h3>$1</h3>");
+    html = html.replace(/^## (.*$)/gim, "<h2>$1</h2>");
+    html = html.replace(/^# (.*$)/gim, "<h1>$1</h1>");
+    html = html.replace(/\*\*(.*?)\*\*/gim, "<strong>$1</strong>");
+    html = html.replace(/\*(.*?)\*/gim, "<em>$1</em>");
+    html = html.replace(/\n/g, "<br />");
+    return html;
+  };
+
   return (
     <div className="details-page">
       <Navbar />
@@ -223,12 +239,33 @@ const LogDetails = () => {
                 </div>
                 <div className="form-group">
                   <label htmlFor="detail-content">Content</label>
-                  <textarea
-                    id="detail-content"
-                    rows="12"
-                    value={content}
-                    onChange={(event) => setContent(event.target.value)}
-                  />
+                  <div className="form-actions-row">
+                    <div />
+                    <div className="preview-toggle">
+                      <button
+                        type="button"
+                        className="secondary"
+                        onClick={() => setPreview((p) => !p)}
+                      >
+                        {preview ? "Edit" : "Preview"}
+                      </button>
+                    </div>
+                  </div>
+                  {preview ? (
+                    <div
+                      className="markdown-preview card"
+                      dangerouslySetInnerHTML={{
+                        __html: markdownToHtml(content),
+                      }}
+                    />
+                  ) : (
+                    <textarea
+                      id="detail-content"
+                      rows="12"
+                      value={content}
+                      onChange={(event) => setContent(event.target.value)}
+                    />
+                  )}
                 </div>
 
                 <div className="form-group mood-group">

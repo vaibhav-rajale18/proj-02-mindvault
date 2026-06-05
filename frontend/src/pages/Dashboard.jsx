@@ -4,6 +4,8 @@ import api from "../services/api";
 import Navbar from "../components/Navbar";
 import LogForm from "../components/LogForm";
 import LogList from "../components/LogList";
+import Streak from "../components/Streak";
+import StatsPanel from "../components/StatsPanel";
 import { formatCreatedAt, formatDateOnly } from "../utils/date";
 
 const Dashboard = () => {
@@ -155,6 +157,7 @@ const Dashboard = () => {
                 <h1 className="primary-heading">
                   Build clarity with disciplined daily logs.
                 </h1>
+                <Streak entries={entries} />
                 <p className="panel-copy">
                   Capture your study insights, maintain focus, and review your
                   progress without distraction.
@@ -170,6 +173,7 @@ const Dashboard = () => {
                 <p className="eyebrow">My Journals</p>
                 <h2>Recent entries</h2>
               </div>
+              <StatsPanel entries={entries} />
               <div className="search-box">
                 <label htmlFor="search">Search Logs</label>
                 <input

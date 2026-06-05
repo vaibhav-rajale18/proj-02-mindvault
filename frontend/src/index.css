@@ -179,7 +179,7 @@ textarea {
   background: rgba(255, 255, 255, 0.18);
 }
 
-..detail-tags .tag,
+.detail-tags .tag,
 .log-card-meta .tag {
   font-size: 0.82rem;
   padding: 8px 12px;
@@ -189,6 +189,83 @@ textarea {
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+.form-actions-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.draft-indicator .note {
+  color: #a78bfa;
+  font-size: 0.9rem;
+}
+
+.preview-toggle button.secondary {
+  padding: 8px 14px;
+}
+
+.markdown-preview {
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.06);
+  color: #e6eef8;
+}
+
+.streak {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.streak-emoji {
+  font-size: 1.25rem;
+}
+
+.streak-current {
+  font-weight: 700;
+}
+
+.streak-longest {
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.stats-panel {
+  padding: 12px 14px;
+  background: rgba(12, 17, 29, 0.9);
+  border-radius: 14px;
+  border: 1px solid rgba(148, 163, 184, 0.06);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+}
+
+.stat-value {
+  font-weight: 800;
+}
+
+.stat-label {
+  font-size: 0.82rem;
+  color: #94a3b8;
+}
+
+.card-tag-list {
+  margin-top: 12px;
 }
 
 .create-form-card {
