@@ -102,42 +102,35 @@ textarea {
   gap: 10px;
 }
 
-.mood-option,
-.tag {
+.mood-option {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 12px 16px;
-  border-radius: 999px;
-  border: 1px solid rgba(148, 163, 184, 0.16);
-  background: rgba(255, 255, 255, 0.05);
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.06);
+  background: rgba(255, 255, 255, 0.02);
   color: var(--text);
   cursor: pointer;
   transition:
-    transform 0.18s ease,
-    border-color 0.2s ease,
-    background-color 0.2s ease,
-    box-shadow 0.2s ease;
+    transform 0.14s ease,
+    border-color 0.16s ease,
+    background-color 0.16s ease;
   font-size: 0.92rem;
 }
 
-.mood-option {
-  min-width: 110px;
-  justify-content: center;
-  background: rgba(15, 23, 42, 0.92);
-  border-color: rgba(139, 92, 246, 0.18);
+.mood-option.min {
+  min-width: 96px;
 }
 
 .mood-option.selected {
-  background: rgba(139, 92, 246, 0.22);
-  border-color: rgba(139, 92, 246, 0.38);
-  box-shadow: 0 18px 36px rgba(139, 92, 246, 0.16);
+  background: rgba(139, 92, 246, 0.12);
+  border-color: rgba(139, 92, 246, 0.18);
+  box-shadow: 0 8px 20px rgba(139, 92, 246, 0.06);
 }
 
-.mood-option:hover,
-.tag:hover {
-  transform: translateY(-1px);
-  border-color: rgba(139, 92, 246, 0.32);
+.mood-option:hover {
+  transform: translateY(-2px);
 }
 
 .mood-emoji {
@@ -145,38 +138,40 @@ textarea {
 }
 
 .tag {
-  color: #e2e8f0;
-  background: rgba(255, 255, 255, 0.06);
+  color: #d6e4ff;
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .mood-pill {
-  background: rgba(139, 92, 246, 0.16);
-  border-color: rgba(139, 92, 246, 0.28);
-  padding: 10px 14px;
+  background: rgba(139, 92, 246, 0.08);
+  border-color: rgba(139, 92, 246, 0.12);
+  padding: 8px 10px;
+  border-radius: 10px;
+  font-size: 0.88rem;
 }
 
 .tag-chip {
-  padding: 8px 12px;
+  padding: 6px 10px;
   gap: 8px;
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(148, 163, 184, 0.2);
+  background: rgba(255, 255, 255, 0.02);
+  border-color: rgba(148, 163, 184, 0.06);
 }
 
 .tag-chip button {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
   border: none;
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
+  border-radius: 6px;
+  width: 22px;
+  height: 22px;
   display: grid;
   place-items: center;
   color: #e2e8f0;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.14s ease;
 }
 
 .tag-chip button:hover {
-  background: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .detail-tags .tag,
@@ -244,8 +239,8 @@ textarea {
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
 }
 
 .stat {
@@ -256,12 +251,13 @@ textarea {
 }
 
 .stat-value {
-  font-weight: 800;
+  font-weight: 700;
+  font-size: 1.05rem;
 }
 
 .stat-label {
-  font-size: 0.82rem;
-  color: #94a3b8;
+  font-size: 0.8rem;
+  color: #9aa7c7;
 }
 
 .card-tag-list {
@@ -277,8 +273,10 @@ textarea {
 
 .create-form-card h2 {
   margin-top: 0;
-  margin-bottom: 16px;
-  font-size: 1.3rem;
+  margin-bottom: 12px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #f8fafc;
   letter-spacing: -0.02em;
 }
 
@@ -331,31 +329,35 @@ textarea:focus {
 
 button {
   border: none;
-  border-radius: 999px;
-  padding: 14px 22px;
+  border-radius: 14px;
+  padding: 10px 16px;
   background: linear-gradient(135deg, #8b5cf6, #7c3aed);
   color: #f8fafc;
   cursor: pointer;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
   transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-  box-shadow: 0 16px 30px rgba(139, 92, 246, 0.2);
+    transform 0.16s ease,
+    box-shadow 0.16s ease,
+    opacity 0.12s ease;
+  box-shadow: 0 10px 22px rgba(139, 92, 246, 0.14);
 }
 
 button:hover {
   transform: translateY(-1px);
-  box-shadow: 0 20px 40px rgba(139, 92, 246, 0.24);
+  box-shadow: 0 14px 28px rgba(139, 92, 246, 0.16);
 }
 
 button.secondary {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
   color: var(--text);
   box-shadow: none;
+  border: 1px solid rgba(148, 163, 184, 0.04);
 }
 
 button.danger {
-  background: #f87171;
+  background: rgba(248, 113, 113, 0.12);
+  color: #fecaca;
+  box-shadow: none;
 }
 
 .navbar {
@@ -477,8 +479,21 @@ button.danger {
 
 .entries-panel-top {
   display: grid;
-  gap: 10px;
-  margin-bottom: 16px;
+  grid-template-columns: 1fr 320px;
+  gap: 18px;
+  align-items: start;
+  margin-bottom: 18px;
+}
+
+.entries-panel-meta {
+  display: block;
+}
+
+.entries-panel-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: stretch;
 }
 
 .entries-panel-top h2 {
@@ -620,7 +635,11 @@ button.danger {
 
   .editor-panel,
   .entries-panel {
-    padding: 24px;
+    padding: 18px;
+  }
+
+  .entries-panel-controls {
+    flex-direction: column;
   }
 }
 
@@ -674,6 +693,17 @@ button.danger {
 
   textarea {
     min-height: 220px;
+  }
+
+  /* Stats grid responsiveness */
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 420px) {
+    .stats-grid {
+      grid-template-columns: 1fr;
+    }
   }
 }
 
@@ -770,16 +800,19 @@ button.danger {
 }
 
 .log-card {
-  background: rgba(12, 17, 29, 0.96);
-  border: 1px solid rgba(148, 163, 184, 0.14);
-  border-radius: 28px;
-  padding: 22px;
-  box-shadow: 0 22px 48px rgba(0, 0, 0, 0.14);
+  background: linear-gradient(
+    180deg,
+    rgba(10, 14, 22, 0.98),
+    rgba(12, 17, 29, 0.98)
+  );
+  border: 1px solid rgba(148, 163, 184, 0.08);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.16);
   transition:
-    transform 0.18s ease,
-    border-color 0.18s ease,
-    background-color 0.18s ease,
-    box-shadow 0.18s ease;
+    transform 0.16s ease,
+    border-color 0.16s ease,
+    box-shadow 0.16s ease;
 }
 
 .log-card.clickable {
@@ -808,7 +841,7 @@ button.danger {
 .log-card-topline {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
+  justify-content: space-between;
   gap: 12px;
   margin-bottom: 10px;
 }
@@ -835,16 +868,22 @@ button.danger {
 .log-card .actions {
   margin-top: 0;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
+  gap: 8px;
 }
 
 .log-card .actions button {
-  padding: 10px 16px;
-  font-size: 0.9rem;
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  border-radius: 10px;
 }
 
 .primary-heading {
   margin: 0;
+  font-size: clamp(1.25rem, 2.6vw, 1.6rem);
+  line-height: 1.12;
+  font-weight: 800;
+  letter-spacing: -0.02em;
 }
 
 .entry-details-header {

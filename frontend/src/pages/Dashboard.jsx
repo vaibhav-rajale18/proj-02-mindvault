@@ -169,21 +169,24 @@ const Dashboard = () => {
 
           <section className="entries-panel card">
             <div className="entries-panel-top">
-              <div>
+              <div className="entries-panel-meta">
                 <p className="eyebrow">My Journals</p>
                 <h2>Recent entries</h2>
               </div>
-              <StatsPanel entries={entries} />
-              <div className="search-box">
-                <label htmlFor="search">Search Logs</label>
-                <input
-                  id="search"
-                  type="search"
-                  value={searchQuery}
-                  onChange={(event) => setSearchQuery(event.target.value)}
-                  placeholder="Search by title, content, or date"
-                  aria-label="Search journals by title, content, or date"
-                />
+
+              <div className="entries-panel-controls">
+                <StatsPanel entries={entries} />
+                <div className="search-box">
+                  <label htmlFor="search">Search Logs</label>
+                  <input
+                    id="search"
+                    type="search"
+                    value={searchQuery}
+                    onChange={(event) => setSearchQuery(event.target.value)}
+                    placeholder="Search by title, content, or date"
+                    aria-label="Search journals by title, content, or date"
+                  />
+                </div>
               </div>
             </div>
 
