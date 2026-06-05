@@ -133,109 +133,114 @@ const LogForm = ({ onSave }) => {
     }
   }, []);
 
-  return (
-    <div className="card create-form-card">
+
+return (
+  <div className="card create-form-card">
+    <div className="form-header">
       <h2>Create New Log</h2>
-      {error && <p className="error">{error}</p>}
+      {draftSaved && <span className="draft-badge">Draft saved</span>}
+    </div>
 
-      <form className="create-form" onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="title">Title</label>
-          <input
-            id="title"
-            type="text"
-            value={title}
-            onChange={(event) => setTitle(event.target.value)}
-            placeholder="Today I..."
-          />
-        </div>
+    {error && <p className="error">{error}</p>}
 
-        <div className="form-actions-row">
-          <div className="preview-toggle">
+    <form className="create-form" onSubmit={handleSubmit}>
+      <div className="form-group">
+        <label htmlFor="title">Title</label>
+        <input
+          id="title"
+          type="text"
+          value={title}
+          onChange={(event) => setTitle(event.target.value)}
+          placeholder="Today I..."
+        />
+      </div>
+
+      <div className="form-group mood-group">
+        <label>How are you feeling today?</label>
+
+        <div className="mood-row">
+          {moodOptions.map((option) => (
             <button
+              key={option.value}
               type="button"
-              className="secondary"
-              onClick={() => setPreview((p) => !p)}
+              className={`mood-option ${
+                mood === option.value ? "selected" : ""
+              }`}
+              onClick={() => setMood(option.value)}
             >
-              {preview ? "Edit" : "Preview"}
+              <span className="mood-emoji">{option.emoji}</span>
             </button>
-          </div>
-          <div className="draft-indicator">
-            {draftSaved && <span className="note">Draft saved</span>}
-          </div>
+          ))}
         </div>
+      </div>
 
-        <div className="form-group">
-          <label htmlFor="content">Daily Writing</label>
-          {preview ? (
-            <div
-              className="markdown-preview card"
-              dangerouslySetInnerHTML={{ __html: markdownToHtml(content) }}
-            />
-          ) : (
-            <textarea
-              id="content"
-              rows="6"
-              value={content}
-              onChange={(event) => setContent(event.target.value)}
-              placeholder="Capture your thoughts and memories."
-            />
-          )}
-        </div>
+      <div className="form-group">
+        <label htmlFor="tags">Tags</label>
 
-        <div className="form-group mood-group">
-          <label>How are you feeling?</label>
-          <div className="mood-row">
-            {moodOptions.map((option) => (
-              <button
-                key={option.value}
-                type="button"
-                className={`mood-option ${mood === option.value ? "selected" : ""}`}
-                onClick={() => setMood(option.value)}
-              >
-                <span className="mood-emoji">{option.emoji}</span>
-                <span>{option.label}</span>
-              </button>
+        <div className="tag-input-block">
+          <div className="tag-chip-row">
+            {tags.map((tag) => (
+              <span className="tag tag-chip" key={tag}>
+                {tag}
+                <button
+                  type="button"
+                  onClick={() => removeTag(tag)}
+                  aria-label={`Remove ${tag}`}
+                >
+                  ×
+                </button>
+              </span>
             ))}
           </div>
-        </div>
 
-        <div className="form-group">
-          <label htmlFor="tags">Tags</label>
-          <div className="tag-input-block">
-            <div className="tag-chip-row">
-              {tags.map((tag) => (
-                <span className="tag tag-chip" key={tag}>
-                  {tag}
-                  <button
-                    type="button"
-                    onClick={() => removeTag(tag)}
-                    aria-label={`Remove ${tag}`}
-                  >
-                    ×
-                  </button>
-                </span>
-              ))}
-            </div>
-            <input
-              id="tags"
-              type="text"
-              value={tagInput}
-              onChange={handleTagInputChange}
-              onKeyDown={handleTagKeyDown}
-              placeholder="Type a tag and press Enter"
-              aria-describedby="tags-help"
-            />
-          </div>
-          <p id="tags-help" className="field-note">
-            Add tags like #Goals or #Ideas, then press Enter.
-          </p>
+          <input
+            id="tags"
+            type="text"
+            value={tagInput}
+            onChange={handleTagInputChange}
+            onKeyDown={handleTagKeyDown}
+            placeholder="Add tags..."
+          />
         </div>
+      </div>
 
-        <button type="submit">Save Log</button>
-      </form>
-    </div>
-  );
+      <div className="form-actions-row compact">
+        <button
+          type="button"
+          className="secondary"
+          onClick={() => setPreview((p) => !p)}
+        >
+          {preview ? "Edit" : "Preview"}
+        </button>
+      </div>
+
+      <div className="form-group">
+        <label htmlFor="content">Daily Writing</label>
+
+        {preview ? (
+          <div
+            className="markdown-preview card"
+            dangerouslySetInnerHTML={{
+              __html: markdownToHtml(content),
+            }}
+          />
+        ) : (
+          <textarea
+            id="content"
+            rows="5"
+            value={content}
+            onChange={(event) => setContent(event.target.value)}
+            placeholder="Write your thoughts calmly..."
+          />
+        )}
+      </div>
+
+      <button type="submit" className="save-btn">
+        Save Log
+      </button>
+    </form>
+  </div>
+);
 };
 
 export default LogForm;
