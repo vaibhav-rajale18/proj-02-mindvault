@@ -74,10 +74,76 @@ textarea {
 }
 
 .form-group {
-  margin-bottom: 14px;
+  margin-bottom: 16px;
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+.field-note {
+  color: #94a3b8;
+  font-size: 0.85rem;
+  margin-top: -8px;
+  line-height: 1.4;
+}
+
+.mood-group .mood-row,
+.log-card-meta,
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.mood-option,
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.92rem;
+}
+
+.mood-option {
+  background: rgba(139, 92, 246, 0.08);
+  border-color: rgba(139, 92, 246, 0.18);
+}
+
+.mood-option.selected {
+  background: rgba(139, 92, 246, 0.2);
+  border-color: rgba(139, 92, 246, 0.34);
+}
+
+.mood-option:hover,
+.tag:hover {
+  transform: translateY(-1px);
+  border-color: rgba(139, 92, 246, 0.32);
+}
+
+.mood-emoji {
+  font-size: 1rem;
+}
+
+.tag {
+  color: #e2e8f0;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.mood-pill {
+  background: rgba(139, 92, 246, 0.14);
+  border-color: rgba(139, 92, 246, 0.25);
+}
+
+.detail-tags .tag,
+.log-card-meta .tag {
+  font-size: 0.82rem;
+  padding: 8px 12px;
 }
 
 .create-form-card {
@@ -103,10 +169,12 @@ textarea {
 }
 
 textarea {
-  min-height: 140px;
-  max-height: 240px;
+  min-height: 180px;
+  max-height: 320px;
   resize: vertical;
-  line-height: 1.7;
+  line-height: 1.9;
+  padding-top: 18px;
+  padding-bottom: 18px;
 }
 
 label {
@@ -436,7 +504,7 @@ button.danger {
 
 @media (max-width: 720px) {
   .container {
-    width: min(100%, calc(100% - 24px));
+    width: min(100%, calc(100% - 20px));
     padding: 18px 0;
   }
 
@@ -458,6 +526,20 @@ button.danger {
     width: 100%;
   }
 
+  .create-form,
+  .detail-form {
+    gap: 18px;
+  }
+
+  .mood-row,
+  .tag-list {
+    justify-content: flex-start;
+  }
+
+  .mood-option,
+  .tag,
+  .log-card .actions button,
+  .detail-actions button,
   button {
     width: 100%;
   }
@@ -466,6 +548,10 @@ button.danger {
   .actions {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  textarea {
+    min-height: 220px;
   }
 }
 
@@ -634,6 +720,14 @@ button.danger {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
+}
+
+.detail-mood {
+  align-self: flex-start;
+}
+
+.detail-tags {
+  margin-bottom: 22px;
 }
 
 .detail-form {

@@ -60,6 +60,8 @@ const Dashboard = () => {
     return entries.filter((entry) => {
       const title = (entry.title || "").toLowerCase();
       const content = (entry.content || "").toLowerCase();
+      const mood = (entry.mood || "").toLowerCase();
+      const tags = (entry.tags || []).join(" ").toLowerCase();
 
       const dt = new Date(entry.createdAt);
 
@@ -96,7 +98,7 @@ const Dashboard = () => {
         .toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
         .toLowerCase();
 
-      const searchableText = `${title}\n${content}\n${formattedFull}\n${formattedShort}\n${dateOnly}\n${isoDate}\n${monthLong}\n${monthShort}\n${dayMonth}\n${dayMonthYear}\n${timeOnly}`;
+      const searchableText = `${title}\n${content}\n${mood}\n${tags}\n${formattedFull}\n${formattedShort}\n${dateOnly}\n${isoDate}\n${monthLong}\n${monthShort}\n${dayMonth}\n${dayMonthYear}\n${timeOnly}`;
 
       return searchableText.includes(q);
     });

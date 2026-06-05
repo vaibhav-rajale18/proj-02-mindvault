@@ -2,7 +2,13 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../services/api";
 import Navbar from "../components/Navbar";
-import { formatCreatedAt, formatDateOnly } from "../utils/date";
+import { formatCreatedAt } from "../utils/date";
+import {
+  moodOptions,
+  moodMap,
+  normalizeTags,
+  formatTagsInput,
+} from "../utils/journal";
 
 const LogDetails = () => {
   const { id } = useParams();
@@ -14,6 +20,8 @@ const LogDetails = () => {
   const [editMode, setEditMode] = useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [mood, setMood] = useState("thoughtful");
+  const [tagsInput, setTagsInput] = useState("");
   const [saving, setSaving] = useState(false);
 
   const handleAuthError = (loadError) => {
@@ -41,6 +49,8 @@ const LogDetails = () => {
         setEntry(response.data);
         setTitle(response.data.title);
         setContent(response.data.content);
+        setMood(response.data.mood || "thoughtful");
+        setTagsInput(formatTagsInput(response.data.tags));
       } catch (fetchError) {
         handleAuthError(fetchError);
       } finally {
@@ -66,6 +76,8 @@ const LogDetails = () => {
       const response = await api.put(`/entries/${id}`, {
         title: title.trim(),
         content: content.trim(),
+        mood,
+        tags: normalizeTags(tagsInput),
       });
       setEntry(response.data);
       setEditMode(false);
@@ -98,6 +110,9 @@ const LogDetails = () => {
       }
     }
   };
+
+  const activeMood = moodMap[entry?.mood] || moodMap.thoughtful;
+  const entryTags = normalizeTags(entry?.tags);
 
   return (
     <div className="details-page">
@@ -139,7 +154,21 @@ const LogDetails = () => {
                   {formatCreatedAt(entry.createdAt)}
                 </p>
               </div>
+              <span className="tag mood-pill detail-mood">
+                <span className="mood-emoji">{activeMood.emoji}</span>
+                {activeMood.label}
+              </span>
             </div>
+
+            {entryTags.length > 0 && (
+              <div className="tag-list detail-tags">
+                {entryTags.map((tag) => (
+                  <span className="tag" key={tag}>
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
 
             {editMode ? (
               <form onSubmit={handleSave} className="detail-form">
@@ -160,6 +189,39 @@ const LogDetails = () => {
                     onChange={(event) => setContent(event.target.value)}
                   />
                 </div>
+
+                <div className="form-group mood-group">
+                  <label>How are you feeling?</label>
+                  <div className="mood-row">
+                    {moodOptions.map((option) => (
+                      <button
+                        key={option.value}
+                        type="button"
+                        className={`mood-option ${mood === option.value ? "selected" : ""}`}
+                        onClick={() => setMood(option.value)}
+                      >
+                        <span className="mood-emoji">{option.emoji}</span>
+                        <span>{option.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="detail-tags">Tags</label>
+                  <input
+                    id="detail-tags"
+                    type="text"
+                    value={tagsInput}
+                    onChange={(event) => setTagsInput(event.target.value)}
+                    placeholder="#Goals, #Coding, #Ideas"
+                    aria-describedby="detail-tags-help"
+                  />
+                  <p id="detail-tags-help" className="field-note">
+                    Separate tags with commas or spaces.
+                  </p>
+                </div>
+
                 <button type="submit" disabled={saving}>
                   {saving ? "Saving..." : "Save Changes"}
                 </button>

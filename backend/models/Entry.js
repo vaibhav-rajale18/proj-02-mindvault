@@ -23,6 +23,24 @@ const entrySchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    mood: {
+      type: String,
+      enum: [
+        "happy",
+        "sad",
+        "frustrated",
+        "calm",
+        "motivated",
+        "tired",
+        "thoughtful",
+      ],
+      default: "thoughtful",
+      trim: true,
+    },
+    tags: {
+      type: [String],
+      default: [],
+    },
   },
   {
     timestamps: true,

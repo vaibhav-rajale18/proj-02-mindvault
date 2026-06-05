@@ -1,8 +1,30 @@
 const Entry = require("../models/Entry");
 
+const moodOptions = [
+  "happy",
+  "sad",
+  "frustrated",
+  "calm",
+  "motivated",
+  "tired",
+  "thoughtful",
+];
+
+const normalizeTags = (tags) => {
+  if (!Array.isArray(tags)) return [];
+  return tags
+    .map((tag) => String(tag || "").trim())
+    .map((tag) => {
+      const cleaned = tag.replace(/^[#]+/, "").replace(/[^a-zA-Z0-9-_]/g, "");
+      return cleaned ? `#${cleaned}` : "";
+    })
+    .filter(Boolean)
+    .filter((tag, index, arr) => arr.indexOf(tag.toLowerCase()) === index);
+};
+
 const createEntry = async (req, res) => {
   try {
-    const { title, content } = req.body;
+    const { title, content, mood, tags } = req.body;
 
     if (!title || !content) {
       return res.status(400).json({
@@ -10,10 +32,18 @@ const createEntry = async (req, res) => {
       });
     }
 
+    if (mood && !moodOptions.includes(mood)) {
+      return res.status(400).json({
+        message: "Invalid mood selected",
+      });
+    }
+
     const entry = await Entry.create({
       userId: req.user,
       title,
       content,
+      mood: mood || "thoughtful",
+      tags: normalizeTags(tags),
     });
 
     res.status(201).json(entry);
@@ -110,8 +140,8 @@ const updateEntry = async (req, res) => {
       });
     }
 
-    // Only accept title and content for edits. Ignore createdAt if provided.
-    const { title, content } = req.body;
+    // Only accept title, content, mood, and tags for edits. Ignore createdAt if provided.
+    const { title, content, mood, tags } = req.body;
 
     if (!title || !content) {
       return res.status(400).json({
@@ -119,8 +149,16 @@ const updateEntry = async (req, res) => {
       });
     }
 
+    if (mood && !moodOptions.includes(mood)) {
+      return res.status(400).json({
+        message: "Invalid mood selected",
+      });
+    }
+
     entry.title = title;
     entry.content = content;
+    entry.mood = mood || entry.mood || "thoughtful";
+    entry.tags = normalizeTags(tags);
     await entry.save();
 
     res.status(200).json(entry);
@@ -207,7 +245,12 @@ const searchEntries = async (req, res) => {
 
     dateFilter = tryParseDateRange(q.trim());
 
-    const orClauses = [{ title: keyword }, { content: keyword }];
+    const orClauses = [
+      { title: keyword },
+      { content: keyword },
+      { mood: keyword },
+      { tags: keyword },
+    ];
 
     if (dateFilter) {
       orClauses.push({
