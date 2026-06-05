@@ -10,7 +10,6 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [entries, setEntries] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [dateFilter, setDateFilter] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const token = localStorage.getItem("mindvault_token");
@@ -62,19 +61,42 @@ const Dashboard = () => {
       const title = (entry.title || "").toLowerCase();
       const content = (entry.content || "").toLowerCase();
 
-      const formatted = (formatCreatedAt(entry.createdAt) || "").toLowerCase();
-      const dateOnly = (formatDateOnly(entry.createdAt) || "").toLowerCase();
-      const isoDate = (
-        new Date(entry.createdAt).toISOString().split("T")[0] || ""
-      ).toLowerCase();
-      const timeOnly = (
-        new Date(entry.createdAt).toLocaleTimeString([], {
+      const dt = new Date(entry.createdAt);
+
+      const formattedFull = dt
+        .toLocaleString(undefined, {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
           hour: "2-digit",
           minute: "2-digit",
-        }) || ""
-      ).toLowerCase();
+        })
+        .toLowerCase();
 
-      const searchableText = `${title}\n${content}\n${formatted}\n${dateOnly}\n${isoDate}\n${timeOnly}`;
+      const formattedShort = formatCreatedAt(entry.createdAt).toLowerCase();
+      const dateOnly = formatDateOnly(entry.createdAt).toLowerCase();
+      const isoDate = dt.toISOString().split("T")[0].toLowerCase();
+      const monthLong = dt
+        .toLocaleString(undefined, { month: "long" })
+        .toLowerCase();
+      const monthShort = dt
+        .toLocaleString(undefined, { month: "short" })
+        .toLowerCase();
+      const dayMonth = dt
+        .toLocaleString(undefined, { month: "short", day: "numeric" })
+        .toLowerCase();
+      const dayMonthYear = dt
+        .toLocaleDateString(undefined, {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        })
+        .toLowerCase();
+      const timeOnly = dt
+        .toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+        .toLowerCase();
+
+      const searchableText = `${title}\n${content}\n${formattedFull}\n${formattedShort}\n${dateOnly}\n${isoDate}\n${monthLong}\n${monthShort}\n${dayMonth}\n${dayMonthYear}\n${timeOnly}`;
 
       return searchableText.includes(q);
     });
@@ -153,43 +175,9 @@ const Dashboard = () => {
                   type="search"
                   value={searchQuery}
                   onChange={(event) => setSearchQuery(event.target.value)}
-                  placeholder="Search by title or text"
+                  placeholder="Search by title, content, or date"
+                  aria-label="Search journals by title, content, or date"
                 />
-                <div
-                  className="date-search"
-                  style={{
-                    marginTop: 8,
-                    display: "flex",
-                    gap: 8,
-                    alignItems: "center",
-                  }}
-                >
-                  <input
-                    aria-label="Filter by date"
-                    type="date"
-                    value={dateFilter}
-                    onChange={(e) => setDateFilter(e.target.value)}
-                    style={{ padding: "6px 8px" }}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setSearchQuery(dateFilter)}
-                    className="secondary"
-                    disabled={!dateFilter}
-                  >
-                    Search by date
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setDateFilter("");
-                      setSearchQuery("");
-                    }}
-                    className="tertiary"
-                  >
-                    Clear
-                  </button>
-                </div>
               </div>
             </div>
 
