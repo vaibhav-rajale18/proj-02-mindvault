@@ -5,8 +5,53 @@ const LogForm = ({ onSave }) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [mood, setMood] = useState("thoughtful");
-  const [tagsInput, setTagsInput] = useState("");
+  const [tags, setTags] = useState([]);
+  const [tagInput, setTagInput] = useState("");
   const [error, setError] = useState("");
+
+  const addTags = (raw) => {
+    const values = String(raw)
+      .split(/[\s,]+/)
+      .map((item) => item.trim())
+      .filter(Boolean);
+    const next = normalizeTags([...tags, ...values]);
+    setTags(next);
+    setTagInput("");
+  };
+
+  const handleTagInputChange = (event) => {
+    const value = event.target.value;
+    if (value.includes(",")) {
+      const next = normalizeTags([
+        ...tags,
+        ...value
+          .split(/[,\s]+/)
+          .map((item) => item.trim())
+          .filter(Boolean),
+      ]);
+      setTags(next);
+      setTagInput("");
+      return;
+    }
+
+    setTagInput(value);
+  };
+
+  const handleTagKeyDown = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      const next = tagInput.trim();
+      if (next) addTags(next);
+    }
+  };
+
+  const removeTag = (tagToRemove) => {
+    setTags((currentTags) =>
+      currentTags.filter(
+        (item) => item.toLowerCase() !== tagToRemove.toLowerCase(),
+      ),
+    );
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -21,11 +66,12 @@ const LogForm = ({ onSave }) => {
       title: title.trim(),
       content: content.trim(),
       mood,
-      tags: normalizeTags(tagsInput),
+      tags,
     });
     setTitle("");
     setContent("");
-    setTagsInput("");
+    setTags([]);
+    setTagInput("");
     setMood("thoughtful");
   };
 
@@ -33,6 +79,7 @@ const LogForm = ({ onSave }) => {
     <div className="card create-form-card">
       <h2>Create New Log</h2>
       {error && <p className="error">{error}</p>}
+
       <form className="create-form" onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="title">Title</label>
@@ -75,16 +122,33 @@ const LogForm = ({ onSave }) => {
 
         <div className="form-group">
           <label htmlFor="tags">Tags</label>
-          <input
-            id="tags"
-            type="text"
-            value={tagsInput}
-            onChange={(event) => setTagsInput(event.target.value)}
-            placeholder="#Goals, #Coding, #Ideas"
-            aria-describedby="tags-help"
-          />
+          <div className="tag-input-block">
+            <div className="tag-chip-row">
+              {tags.map((tag) => (
+                <span className="tag tag-chip" key={tag}>
+                  {tag}
+                  <button
+                    type="button"
+                    onClick={() => removeTag(tag)}
+                    aria-label={`Remove ${tag}`}
+                  >
+                    ×
+                  </button>
+                </span>
+              ))}
+            </div>
+            <input
+              id="tags"
+              type="text"
+              value={tagInput}
+              onChange={handleTagInputChange}
+              onKeyDown={handleTagKeyDown}
+              placeholder="Type a tag and press Enter"
+              aria-describedby="tags-help"
+            />
+          </div>
           <p id="tags-help" className="field-note">
-            Add one or more tags separated by commas or spaces.
+            Add tags like #Goals or #Ideas, then press Enter.
           </p>
         </div>
 

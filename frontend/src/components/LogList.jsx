@@ -29,8 +29,14 @@ const LogList = ({ entries, onDelete }) => {
           >
             <div className="log-card-header">
               <div>
-                <div className="entry-date">
-                  {formatCreatedAt(entry.createdAt)}
+                <div className="log-card-topline">
+                  <span className="entry-date">
+                    {formatCreatedAt(entry.createdAt)}
+                  </span>
+                  <span className="tag mood-pill">
+                    <span className="mood-emoji">{mood.emoji}</span>
+                    {mood.label}
+                  </span>
                 </div>
                 <h3>{entry.title}</h3>
               </div>
@@ -46,21 +52,18 @@ const LogList = ({ entries, onDelete }) => {
                 </button>
               </div>
             </div>
-            <div className="log-card-meta">
-              <span className="tag mood-pill">
-                <span className="mood-emoji">{mood.emoji}</span>
-                {mood.label}
-              </span>
-              {tags.length > 0 && (
-                <div className="tag-list">
-                  {tags.map((tag) => (
-                    <span className="tag" key={tag}>
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </div>
+
+            <p className="log-card-preview">{entry.content}</p>
+
+            {tags.length > 0 && (
+              <div className="tag-list card-tag-list">
+                {tags.map((tag) => (
+                  <span className="tag" key={tag}>
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
         );
       })}

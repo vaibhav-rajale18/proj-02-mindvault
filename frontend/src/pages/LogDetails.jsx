@@ -3,12 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import api from "../services/api";
 import Navbar from "../components/Navbar";
 import { formatCreatedAt } from "../utils/date";
-import {
-  moodOptions,
-  moodMap,
-  normalizeTags,
-  formatTagsInput,
-} from "../utils/journal";
+import { moodOptions, moodMap, normalizeTags } from "../utils/journal";
 
 const LogDetails = () => {
   const { id } = useParams();
@@ -21,7 +16,8 @@ const LogDetails = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [mood, setMood] = useState("thoughtful");
-  const [tagsInput, setTagsInput] = useState("");
+  const [tags, setTags] = useState([]);
+  const [tagInput, setTagInput] = useState("");
   const [saving, setSaving] = useState(false);
 
   const handleAuthError = (loadError) => {
@@ -50,7 +46,8 @@ const LogDetails = () => {
         setTitle(response.data.title);
         setContent(response.data.content);
         setMood(response.data.mood || "thoughtful");
-        setTagsInput(formatTagsInput(response.data.tags));
+        setTags(normalizeTags(response.data.tags));
+        setTagInput("");
       } catch (fetchError) {
         handleAuthError(fetchError);
       } finally {
@@ -60,6 +57,50 @@ const LogDetails = () => {
 
     loadEntry();
   }, [id, navigate, token]);
+
+  const addTags = (raw) => {
+    const values = String(raw)
+      .split(/[\s,]+/)
+      .map((item) => item.trim())
+      .filter(Boolean);
+    const next = normalizeTags([...tags, ...values]);
+    setTags(next);
+    setTagInput("");
+  };
+
+  const handleTagInputChange = (event) => {
+    const value = event.target.value;
+    if (value.includes(",")) {
+      const next = normalizeTags([
+        ...tags,
+        ...value
+          .split(/[,\s]+/)
+          .map((item) => item.trim())
+          .filter(Boolean),
+      ]);
+      setTags(next);
+      setTagInput("");
+      return;
+    }
+
+    setTagInput(value);
+  };
+
+  const handleTagKeyDown = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      const next = tagInput.trim();
+      if (next) addTags(next);
+    }
+  };
+
+  const removeTag = (tagToRemove) => {
+    setTags((currentTags) =>
+      currentTags.filter(
+        (item) => item.toLowerCase() !== tagToRemove.toLowerCase(),
+      ),
+    );
+  };
 
   const handleSave = async (event) => {
     event.preventDefault();
@@ -77,7 +118,7 @@ const LogDetails = () => {
         title: title.trim(),
         content: content.trim(),
         mood,
-        tags: normalizeTags(tagsInput),
+        tags,
       });
       setEntry(response.data);
       setEditMode(false);
@@ -209,16 +250,33 @@ const LogDetails = () => {
 
                 <div className="form-group">
                   <label htmlFor="detail-tags">Tags</label>
-                  <input
-                    id="detail-tags"
-                    type="text"
-                    value={tagsInput}
-                    onChange={(event) => setTagsInput(event.target.value)}
-                    placeholder="#Goals, #Coding, #Ideas"
-                    aria-describedby="detail-tags-help"
-                  />
+                  <div className="tag-input-block">
+                    <div className="tag-chip-row">
+                      {tags.map((tag) => (
+                        <span className="tag tag-chip" key={tag}>
+                          {tag}
+                          <button
+                            type="button"
+                            onClick={() => removeTag(tag)}
+                            aria-label={`Remove ${tag}`}
+                          >
+                            ×
+                          </button>
+                        </span>
+                      ))}
+                    </div>
+                    <input
+                      id="detail-tags"
+                      type="text"
+                      value={tagInput}
+                      onChange={handleTagInputChange}
+                      onKeyDown={handleTagKeyDown}
+                      placeholder="Type a tag and press Enter"
+                      aria-describedby="detail-tags-help"
+                    />
+                  </div>
                   <p id="detail-tags-help" className="field-note">
-                    Separate tags with commas or spaces.
+                    Add tags like #Goals or #Ideas, then press Enter.
                   </p>
                 </div>
 
