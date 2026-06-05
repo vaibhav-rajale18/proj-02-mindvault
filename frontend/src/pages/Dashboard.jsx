@@ -4,6 +4,7 @@ import api from "../services/api";
 import Navbar from "../components/Navbar";
 import LogForm from "../components/LogForm";
 import LogList from "../components/LogList";
+import { formatCreatedAt, formatDateOnly } from "../utils/date";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -38,21 +39,8 @@ const Dashboard = () => {
     const fetchEntries = async () => {
       try {
         setLoading(true);
-
-        const trimmed = searchQuery.trim();
-
-        let response;
-        if (!trimmed) {
-          response = await api.get("/entries");
-        } else {
-          response = await api.get(
-            `/entries/search?q=${encodeURIComponent(trimmed)}`,
-          );
-        }
-
-        if (mounted) {
-          setEntries(response.data);
-        }
+        const response = await api.get("/entries");
+        if (mounted) setEntries(response.data);
       } catch (loadError) {
         handleAuthError(loadError);
       } finally {
@@ -60,22 +48,35 @@ const Dashboard = () => {
       }
     };
 
-    const timer = setTimeout(fetchEntries, 300);
+    fetchEntries();
     return () => {
       mounted = false;
-      clearTimeout(timer);
     };
-  }, [navigate, token, searchQuery]);
+  }, [navigate, token]);
 
   const filteredEntries = useMemo(() => {
-    const query = searchQuery.trim().toLowerCase();
-    if (!query) return entries;
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return entries;
 
     return entries.filter((entry) => {
-      return (
-        entry.title.toLowerCase().includes(query) ||
-        entry.content.toLowerCase().includes(query)
-      );
+      const title = (entry.title || "").toLowerCase();
+      const content = (entry.content || "").toLowerCase();
+
+      const formatted = (formatCreatedAt(entry.createdAt) || "").toLowerCase();
+      const dateOnly = (formatDateOnly(entry.createdAt) || "").toLowerCase();
+      const isoDate = (
+        new Date(entry.createdAt).toISOString().split("T")[0] || ""
+      ).toLowerCase();
+      const timeOnly = (
+        new Date(entry.createdAt).toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }) || ""
+      ).toLowerCase();
+
+      const searchableText = `${title}\n${content}\n${formatted}\n${dateOnly}\n${isoDate}\n${timeOnly}`;
+
+      return searchableText.includes(q);
     });
   }, [entries, searchQuery]);
 
