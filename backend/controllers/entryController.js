@@ -110,6 +110,7 @@ const updateEntry = async (req, res) => {
       });
     }
 
+    // Only accept title and content for edits. Ignore createdAt if provided.
     const { title, content } = req.body;
 
     if (!title || !content) {

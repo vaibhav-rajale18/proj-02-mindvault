@@ -7,6 +7,12 @@ const entrySchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    // Make createdAt explicitly immutable to prevent accidental overwrite
+    createdAt: {
+      type: Date,
+      default: Date.now,
+      immutable: true,
+    },
     title: {
       type: String,
       required: true,

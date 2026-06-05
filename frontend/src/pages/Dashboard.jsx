@@ -9,6 +9,7 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [entries, setEntries] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [dateFilter, setDateFilter] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const token = localStorage.getItem("mindvault_token");
@@ -153,6 +154,41 @@ const Dashboard = () => {
                   onChange={(event) => setSearchQuery(event.target.value)}
                   placeholder="Search by title or text"
                 />
+                <div
+                  className="date-search"
+                  style={{
+                    marginTop: 8,
+                    display: "flex",
+                    gap: 8,
+                    alignItems: "center",
+                  }}
+                >
+                  <input
+                    aria-label="Filter by date"
+                    type="date"
+                    value={dateFilter}
+                    onChange={(e) => setDateFilter(e.target.value)}
+                    style={{ padding: "6px 8px" }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setSearchQuery(dateFilter)}
+                    className="secondary"
+                    disabled={!dateFilter}
+                  >
+                    Search by date
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setDateFilter("");
+                      setSearchQuery("");
+                    }}
+                    className="tertiary"
+                  >
+                    Clear
+                  </button>
+                </div>
               </div>
             </div>
 
