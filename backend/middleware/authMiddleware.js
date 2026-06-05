@@ -1,36 +1,33 @@
 const jwt = require("jsonwebtoken");
 
 const protect = async (req, res, next) => {
-let token;
+  try {
+    const authHeader = req.headers.authorization || req.headers.Authorization;
 
-if (
-req.headers.authorization &&
-req.headers.authorization.startsWith("Bearer")
-) {
-try {
-token = req.headers.authorization.split(" ")[1];
+    if (!authHeader || authHeader.split(" ")[0].toLowerCase() !== "bearer") {
+      return res.status(401).json({
+        message: "Not authorized, token missing",
+      });
+    }
 
+    const token = authHeader.split(" ")[1];
 
-  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (!token) {
+      return res.status(401).json({
+        message: "Not authorized, token missing",
+      });
+    }
 
-  req.user = decoded.id;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-  next();
-} catch (error) {
-  console.error(error);
-  return res.status(401).json({
-    message: "Not authorized, token failed",
-  });
-}
-
-
-}
-
-if (!token) {
-return res.status(401).json({
-message: "Not authorized, no token",
-});
-}
+    req.user = decoded.id;
+    next();
+  } catch (error) {
+    console.error("Auth middleware error:", error.message);
+    return res.status(401).json({
+      message: "Not authorized, token invalid",
+    });
+  }
 };
 
 module.exports = protect;

@@ -6,6 +6,7 @@ import Navbar from "../components/Navbar";
 const LogDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const token = localStorage.getItem("mindvault_token");
   const [entry, setEntry] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -14,7 +15,25 @@ const LogDetails = () => {
   const [content, setContent] = useState("");
   const [saving, setSaving] = useState(false);
 
+  const handleAuthError = (loadError) => {
+    if (
+      loadError.response?.status === 401 ||
+      loadError.response?.status === 403
+    ) {
+      localStorage.removeItem("mindvault_token");
+      navigate("/login");
+      return;
+    }
+
+    setError("Unable to load this entry. Please try again.");
+  };
+
   useEffect(() => {
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+
     const loadEntry = async () => {
       try {
         const response = await api.get(`/entries/${id}`);
@@ -22,14 +41,14 @@ const LogDetails = () => {
         setTitle(response.data.title);
         setContent(response.data.content);
       } catch (fetchError) {
-        setError("Unable to load this entry. Please try again.");
+        handleAuthError(fetchError);
       } finally {
         setLoading(false);
       }
     };
 
     loadEntry();
-  }, [id]);
+  }, [id, navigate, token]);
 
   const handleSave = async (event) => {
     event.preventDefault();
@@ -50,7 +69,14 @@ const LogDetails = () => {
       setEntry(response.data);
       setEditMode(false);
     } catch (saveError) {
-      setError("Unable to save changes. Please try again.");
+      if (
+        saveError.response?.status === 401 ||
+        saveError.response?.status === 403
+      ) {
+        handleAuthError(saveError);
+      } else {
+        setError("Unable to save changes. Please try again.");
+      }
     } finally {
       setSaving(false);
     }
@@ -61,7 +87,14 @@ const LogDetails = () => {
       await api.delete(`/entries/${id}`);
       navigate("/dashboard");
     } catch (deleteError) {
-      setError("Unable to delete entry. Please try again.");
+      if (
+        deleteError.response?.status === 401 ||
+        deleteError.response?.status === 403
+      ) {
+        handleAuthError(deleteError);
+      } else {
+        setError("Unable to delete entry. Please try again.");
+      }
     }
   };
 

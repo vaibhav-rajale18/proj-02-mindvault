@@ -28,9 +28,12 @@ const Register = () => {
     setLoading(true);
 
     try {
-      await api.post("/auth/register", { name, email, password });
-      const loginResponse = await api.post("/auth/login", { email, password });
-      localStorage.setItem("mindvault_token", loginResponse.data.token);
+      const response = await api.post("/auth/register", {
+        name,
+        email,
+        password,
+      });
+      localStorage.setItem("mindvault_token", response.data.token);
       navigate("/dashboard");
     } catch (errorResponse) {
       setError(

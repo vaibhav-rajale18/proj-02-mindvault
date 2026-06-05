@@ -13,6 +13,19 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const token = localStorage.getItem("mindvault_token");
 
+  const handleAuthError = (loadError) => {
+    if (
+      loadError.response?.status === 401 ||
+      loadError.response?.status === 403
+    ) {
+      localStorage.removeItem("mindvault_token");
+      navigate("/login");
+      return;
+    }
+
+    setError("Unable to load logs. Please try again.");
+  };
+
   useEffect(() => {
     if (!token) {
       navigate("/login");
@@ -24,7 +37,7 @@ const Dashboard = () => {
         const response = await api.get("/entries");
         setEntries(response.data);
       } catch (loadError) {
-        setError("Unable to load logs. Please try again.");
+        handleAuthError(loadError);
       } finally {
         setLoading(false);
       }
@@ -51,7 +64,15 @@ const Dashboard = () => {
       setEntries((prevEntries) => [response.data, ...prevEntries]);
       setError("");
     } catch (createError) {
-      setError("Unable to save log. Please try again.");
+      if (
+        createError.response?.status === 401 ||
+        createError.response?.status === 403
+      ) {
+        localStorage.removeItem("mindvault_token");
+        navigate("/login");
+      } else {
+        setError("Unable to save log. Please try again.");
+      }
     }
   };
 
@@ -63,7 +84,15 @@ const Dashboard = () => {
       );
       setError("");
     } catch (deleteError) {
-      setError("Unable to delete log. Please try again.");
+      if (
+        deleteError.response?.status === 401 ||
+        deleteError.response?.status === 403
+      ) {
+        localStorage.removeItem("mindvault_token");
+        navigate("/login");
+      } else {
+        setError("Unable to delete log. Please try again.");
+      }
     }
   };
 
