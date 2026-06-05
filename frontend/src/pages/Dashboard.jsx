@@ -32,19 +32,39 @@ const Dashboard = () => {
       return;
     }
 
-    const loadEntries = async () => {
+    let mounted = true;
+
+    const fetchEntries = async () => {
       try {
-        const response = await api.get("/entries");
-        setEntries(response.data);
+        setLoading(true);
+
+        const trimmed = searchQuery.trim();
+
+        let response;
+        if (!trimmed) {
+          response = await api.get("/entries");
+        } else {
+          response = await api.get(
+            `/entries/search?q=${encodeURIComponent(trimmed)}`,
+          );
+        }
+
+        if (mounted) {
+          setEntries(response.data);
+        }
       } catch (loadError) {
         handleAuthError(loadError);
       } finally {
-        setLoading(false);
+        if (mounted) setLoading(false);
       }
     };
 
-    loadEntries();
-  }, [navigate, token]);
+    const timer = setTimeout(fetchEntries, 300);
+    return () => {
+      mounted = false;
+      clearTimeout(timer);
+    };
+  }, [navigate, token, searchQuery]);
 
   const filteredEntries = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();

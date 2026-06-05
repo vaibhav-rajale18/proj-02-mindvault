@@ -143,9 +143,80 @@ const searchEntries = async (req, res) => {
 
     const keyword = new RegExp(q, "i");
 
+    // Build base filters
+    const baseFilter = { userId: req.user };
+
+    // Try to interpret the query as a date or partial date
+    const now = new Date();
+    let dateFilter = null;
+
+    const tryParseDateRange = (input) => {
+      // ISO full date YYYY-MM-DD
+      const isoDay = /^\d{4}-\d{2}-\d{2}$/;
+      const isoMonth = /^\d{4}-\d{2}$/;
+      const yearOnly = /^\d{4}$/;
+
+      if (isoDay.test(input)) {
+        const start = new Date(input + "T00:00:00.000Z");
+        const end = new Date(input + "T23:59:59.999Z");
+        return { start, end };
+      }
+
+      if (isoMonth.test(input)) {
+        const [y, m] = input.split("-");
+        const start = new Date(Date.UTC(Number(y), Number(m) - 1, 1, 0, 0, 0));
+        const end = new Date(
+          Date.UTC(Number(y), Number(m), 0, 23, 59, 59, 999),
+        );
+        return { start, end };
+      }
+
+      if (yearOnly.test(input)) {
+        const y = Number(input);
+        const start = new Date(Date.UTC(y, 0, 1, 0, 0, 0));
+        const end = new Date(Date.UTC(y, 11, 31, 23, 59, 59, 999));
+        return { start, end };
+      }
+
+      // Try natural language parse
+      let parsed = new Date(input);
+      if (!isNaN(parsed.getTime())) {
+        // treat as that exact day
+        const year = parsed.getUTCFullYear();
+        const month = parsed.getUTCMonth();
+        const day = parsed.getUTCDate();
+        const start = new Date(Date.UTC(year, month, day, 0, 0, 0));
+        const end = new Date(Date.UTC(year, month, day, 23, 59, 59, 999));
+        return { start, end };
+      }
+
+      // Try appending current year for partial dates like "May 21"
+      parsed = new Date(input + " " + now.getUTCFullYear());
+      if (!isNaN(parsed.getTime())) {
+        const year = parsed.getUTCFullYear();
+        const month = parsed.getUTCMonth();
+        const day = parsed.getUTCDate();
+        const start = new Date(Date.UTC(year, month, day, 0, 0, 0));
+        const end = new Date(Date.UTC(year, month, day, 23, 59, 59, 999));
+        return { start, end };
+      }
+
+      return null;
+    };
+
+    dateFilter = tryParseDateRange(q.trim());
+
+    const orClauses = [{ title: keyword }, { content: keyword }];
+
+    if (dateFilter) {
+      orClauses.push({
+        createdAt: { $gte: dateFilter.start, $lte: dateFilter.end },
+      });
+    }
+
     const entries = await Entry.find({
-      userId: req.user,
-      $or: [{ title: keyword }, { content: keyword }],
+      ...baseFilter,
+      $or: orClauses,
     }).sort({ createdAt: -1 });
 
     res.status(200).json(entries);

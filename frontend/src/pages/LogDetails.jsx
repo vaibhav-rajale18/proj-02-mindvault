@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../services/api";
 import Navbar from "../components/Navbar";
+import { formatCreatedAt, formatDateOnly } from "../utils/date";
 
 const LogDetails = () => {
   const { id } = useParams();
@@ -135,7 +136,7 @@ const LogDetails = () => {
                 <p className="eyebrow">Journal entry</p>
                 <h2>{entry.title}</h2>
                 <p className="entry-date detail-date">
-                  {new Date(entry.createdAt).toLocaleString()}
+                  {formatCreatedAt(entry.createdAt)}
                 </p>
               </div>
             </div>

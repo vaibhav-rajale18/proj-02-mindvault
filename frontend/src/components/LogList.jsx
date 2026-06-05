@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { formatCreatedAt } from "../utils/date";
 
 const LogList = ({ entries, onDelete }) => {
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ const LogList = ({ entries, onDelete }) => {
           <div className="log-card-header">
             <div>
               <div className="entry-date">
-                {new Date(entry.createdAt).toLocaleString()}
+                {formatCreatedAt(entry.createdAt)}
               </div>
               <h3>{entry.title}</h3>
             </div>
