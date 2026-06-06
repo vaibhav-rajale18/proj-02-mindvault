@@ -176,7 +176,7 @@ const LogDetails = () => {
     <div className="app-shell">
       <Sidebar />
 
-```
+
   <div className="container details-shell">
     {loading ? (
       <div className="empty-state">
