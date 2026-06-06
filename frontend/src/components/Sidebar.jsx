@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import Streak from "./Streak";
 
 const Sidebar = ({ entries = [] }) => {
@@ -17,13 +17,48 @@ const Sidebar = ({ entries = [] }) => {
       </div>
 
       <nav className="nav-links">
-        <button className="nav-link active">Dashboard</button>
-        <button className="nav-link">Journals</button>
-        <button className="nav-link">Analytics</button>
-        <button className="nav-link">Calendar</button>
-        <button className="nav-link">Tags</button>
-        <button className="nav-link">Mood Stats</button>
-        <button className="nav-link">Settings</button>
+        <NavLink
+          to="/dashboard"
+          className={({ isActive }) => `nav-link${isActive ? " active" : ""}`}
+        >
+          Dashboard
+        </NavLink>
+        <NavLink
+          to="/journals"
+          className={({ isActive }) => `nav-link${isActive ? " active" : ""}`}
+        >
+          Journals
+        </NavLink>
+        <NavLink
+          to="/analytics"
+          className={({ isActive }) => `nav-link${isActive ? " active" : ""}`}
+        >
+          Analytics
+        </NavLink>
+        <NavLink
+          to="/calendar"
+          className={({ isActive }) => `nav-link${isActive ? " active" : ""}`}
+        >
+          Calendar
+        </NavLink>
+        <NavLink
+          to="/tags"
+          className={({ isActive }) => `nav-link${isActive ? " active" : ""}`}
+        >
+          Tags
+        </NavLink>
+        <NavLink
+          to="/mood-stats"
+          className={({ isActive }) => `nav-link${isActive ? " active" : ""}`}
+        >
+          Mood Stats
+        </NavLink>
+        <NavLink
+          to="/settings"
+          className={({ isActive }) => `nav-link${isActive ? " active" : ""}`}
+        >
+          Settings
+        </NavLink>
       </nav>
 
       <div className="sidebar-footer">

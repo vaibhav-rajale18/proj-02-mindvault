@@ -1,59 +1,16 @@
-import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useMemo, useState } from "react";
 import api from "../services/api";
 import Sidebar from "../components/Sidebar";
 import LogForm from "../components/LogForm";
 import LogList from "../components/LogList";
 import Streak from "../components/Streak";
 import StatsPanel from "../components/StatsPanel";
+import { useEntries } from "../hooks/useEntries";
 import { formatCreatedAt, formatDateOnly } from "../utils/date";
 
 const Dashboard = () => {
-  const navigate = useNavigate();
-  const [entries, setEntries] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(true);
-  const token = localStorage.getItem("mindvault_token");
-
-  const handleAuthError = (loadError) => {
-    if (
-      loadError.response?.status === 401 ||
-      loadError.response?.status === 403
-    ) {
-      localStorage.removeItem("mindvault_token");
-      navigate("/login");
-      return;
-    }
-
-    setError("Unable to load logs. Please try again.");
-  };
-
-  useEffect(() => {
-    if (!token) {
-      navigate("/login");
-      return;
-    }
-
-    let mounted = true;
-
-    const fetchEntries = async () => {
-      try {
-        setLoading(true);
-        const response = await api.get("/entries");
-        if (mounted) setEntries(response.data);
-      } catch (loadError) {
-        handleAuthError(loadError);
-      } finally {
-        if (mounted) setLoading(false);
-      }
-    };
-
-    fetchEntries();
-    return () => {
-      mounted = false;
-    };
-  }, [navigate, token]);
+  const { entries, loading, error, setError, setEntries } = useEntries();
 
   const filteredEntries = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
@@ -117,7 +74,7 @@ const Dashboard = () => {
         createError.response?.status === 403
       ) {
         localStorage.removeItem("mindvault_token");
-        navigate("/login");
+        window.location.href = "/login";
       } else {
         setError("Unable to save log. Please try again.");
       }
@@ -137,7 +94,7 @@ const Dashboard = () => {
         deleteError.response?.status === 403
       ) {
         localStorage.removeItem("mindvault_token");
-        navigate("/login");
+        window.location.href = "/login";
       } else {
         setError("Unable to delete log. Please try again.");
       }
@@ -149,62 +106,62 @@ const Dashboard = () => {
       <div className="app-shell">
         <Sidebar entries={entries} />
         <div className="container dashboard-shell">
-        {error && <p className="error page-error">{error}</p>}
-        <div className="dashboard-grid">
-          <section className="editor-panel">
-            <div className="editor-header">
-              <div>
-                <p className="eyebrow">Reflect and plan</p>
-                <h1 className="primary-heading">
-                  Build clarity with disciplined daily logs.
-                </h1>
-                <Streak entries={entries} />
-                <p className="panel-copy">
-                  Capture your study insights, maintain focus, and review your
-                  progress without distraction.
-                </p>
-              </div>
-            </div>
-            <LogForm onSave={handleSave} />
-          </section>
-
-          <section className="entries-panel card">
-            <div className="entries-panel-top">
-              <div className="entries-panel-meta">
-                <p className="eyebrow">My Journals</p>
-                <h2>Recent entries</h2>
-              </div>
-
-              <div className="entries-panel-controls">
-                <StatsPanel entries={entries} />
-                <div className="search-box">
-                  <label htmlFor="search">Search Logs</label>
-                  <input
-                    id="search"
-                    type="search"
-                    value={searchQuery}
-                    onChange={(event) => setSearchQuery(event.target.value)}
-                    placeholder="Search by title, content, or date"
-                    aria-label="Search journals by title, content, or date"
-                  />
+          {error && <p className="error page-error">{error}</p>}
+          <div className="dashboard-grid">
+            <section className="editor-panel">
+              <div className="editor-header">
+                <div>
+                  <p className="eyebrow">Reflect and plan</p>
+                  <h1 className="primary-heading">
+                    Build clarity with disciplined daily logs.
+                  </h1>
+                  <Streak entries={entries} />
+                  <p className="panel-copy">
+                    Capture your study insights, maintain focus, and review your
+                    progress without distraction.
+                  </p>
                 </div>
               </div>
-            </div>
+              <LogForm onSave={handleSave} />
+            </section>
 
-            {loading ? (
-              <div className="empty-state">
-                <p className="message">Loading your logs…</p>
+            <section className="entries-panel card">
+              <div className="entries-panel-top">
+                <div className="entries-panel-meta">
+                  <p className="eyebrow">My Journals</p>
+                  <h2>Recent entries</h2>
+                </div>
+
+                <div className="entries-panel-controls">
+                  <StatsPanel entries={entries} />
+                  <div className="search-box">
+                    <label htmlFor="search">Search Logs</label>
+                    <input
+                      id="search"
+                      type="search"
+                      value={searchQuery}
+                      onChange={(event) => setSearchQuery(event.target.value)}
+                      placeholder="Search by title, content, or date"
+                      aria-label="Search journals by title, content, or date"
+                    />
+                  </div>
+                </div>
               </div>
-            ) : (
-              <div className="entry-scroll">
-                <LogList entries={filteredEntries} onDelete={handleDelete} />
-              </div>
-            )}
-          </section>
+
+              {loading ? (
+                <div className="empty-state">
+                  <p className="message">Loading your logs…</p>
+                </div>
+              ) : (
+                <div className="entry-scroll">
+                  <LogList entries={filteredEntries} onDelete={handleDelete} />
+                </div>
+              )}
+            </section>
+          </div>
         </div>
       </div>
     </div>
-  </div>
   );
 };
 

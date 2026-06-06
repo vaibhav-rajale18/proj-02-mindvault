@@ -460,6 +460,61 @@ button.danger {
   width: 100%;
 }
 
+.page-panel {
+  background: rgba(15, 23, 42, 0.92);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  border-radius: 24px;
+  padding: 22px;
+  box-shadow: 0 24px 40px rgba(0, 0, 0, 0.18);
+}
+
+.page-content {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.page-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.overview-card {
+  padding: 18px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(148, 163, 184, 0.08);
+}
+
+.overview-card h3 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+}
+
+.overview-card p {
+  margin: 0;
+  color: #cbd5e1;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.summary-row strong {
+  display: block;
+  font-size: 0.98rem;
+}
+
+.summary-row span {
+  color: #94a3b8;
+}
+
 /* Ensure main container grows beside sidebar */
 .container.dashboard-shell {
   width: auto;
