@@ -1,6 +1,16 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import Streak from "./Streak";
 
+const navItems = [
+  { to: "/dashboard", icon: "🏠", label: "Dashboard" },
+  { to: "/journals", icon: "📓", label: "Journals" },
+  { to: "/analytics", icon: "📊", label: "Analytics" },
+  { to: "/calendar", icon: "📅", label: "Calendar" },
+  { to: "/tags", icon: "🏷️", label: "Tags" },
+  { to: "/mood-stats", icon: "😊", label: "Mood Stats" },
+  { to: "/settings", icon: "⚙️", label: "Settings" },
+];
+
 const Sidebar = ({ entries = [] }) => {
   const navigate = useNavigate();
 
@@ -17,48 +27,16 @@ const Sidebar = ({ entries = [] }) => {
       </div>
 
       <nav className="nav-links">
-        <NavLink
-          to="/dashboard"
-          className={({ isActive }) => `nav-link${isActive ? " active" : ""}`}
-        >
-          Dashboard
-        </NavLink>
-        <NavLink
-          to="/journals"
-          className={({ isActive }) => `nav-link${isActive ? " active" : ""}`}
-        >
-          Journals
-        </NavLink>
-        <NavLink
-          to="/analytics"
-          className={({ isActive }) => `nav-link${isActive ? " active" : ""}`}
-        >
-          Analytics
-        </NavLink>
-        <NavLink
-          to="/calendar"
-          className={({ isActive }) => `nav-link${isActive ? " active" : ""}`}
-        >
-          Calendar
-        </NavLink>
-        <NavLink
-          to="/tags"
-          className={({ isActive }) => `nav-link${isActive ? " active" : ""}`}
-        >
-          Tags
-        </NavLink>
-        <NavLink
-          to="/mood-stats"
-          className={({ isActive }) => `nav-link${isActive ? " active" : ""}`}
-        >
-          Mood Stats
-        </NavLink>
-        <NavLink
-          to="/settings"
-          className={({ isActive }) => `nav-link${isActive ? " active" : ""}`}
-        >
-          Settings
-        </NavLink>
+        {navItems.map((item) => (
+          <NavLink
+            key={item.to}
+            to={item.to}
+            className={({ isActive }) => `nav-link${isActive ? " active" : ""}`}
+          >
+            <span className="nav-icon">{item.icon}</span>
+            <span>{item.label}</span>
+          </NavLink>
+        ))}
       </nav>
 
       <div className="sidebar-footer">
