@@ -374,6 +374,98 @@ button.danger {
   border-bottom: 1px solid rgba(148, 163, 184, 0.08);
 }
 
+/* App shell layout with sidebar */
+.app-shell {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  height: 100%;
+}
+
+.sidebar {
+  width: 240px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  background: linear-gradient(
+    180deg,
+    rgba(11, 12, 20, 0.6),
+    rgba(8, 10, 16, 0.6)
+  );
+  border-radius: 18px;
+  border: 1px solid rgba(148, 163, 184, 0.06);
+  box-shadow: 0 14px 30px rgba(2, 6, 23, 0.5);
+  min-height: calc(100vh - 48px);
+}
+
+.sidebar-brand .logo {
+  font-weight: 900;
+  font-size: 1.25rem;
+}
+
+.sidebar .logo-sub {
+  margin: 0;
+  color: #cbd5e1;
+  font-size: 0.85rem;
+}
+
+.nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.nav-link {
+  background: transparent;
+  border: none;
+  text-align: left;
+  padding: 10px 12px;
+  border-radius: 10px;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.nav-link.active {
+  background: linear-gradient(
+    90deg,
+    rgba(139, 92, 246, 0.12),
+    rgba(124, 58, 237, 0.06)
+  );
+  border: 1px solid rgba(139, 92, 246, 0.16);
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.side-card {
+  padding: 12px;
+  background: rgba(15, 23, 42, 0.6);
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.06);
+}
+
+.streak-card {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.logout-btn {
+  width: 100%;
+}
+
+/* Ensure main container grows beside sidebar */
+.container.dashboard-shell {
+  width: auto;
+  flex: 1 1 auto;
+}
+
 .navbar-brand {
   display: grid;
   gap: 3px;
@@ -2173,4 +2265,3 @@ textarea {
     grid-template-columns: 1fr;
   }
 }
-

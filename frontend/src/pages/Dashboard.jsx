@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
-import Navbar from "../components/Navbar";
+import Sidebar from "../components/Sidebar";
 import LogForm from "../components/LogForm";
 import LogList from "../components/LogList";
 import Streak from "../components/Streak";
@@ -146,8 +146,9 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-page">
-      <Navbar />
-      <div className="container dashboard-shell">
+      <div className="app-shell">
+        <Sidebar entries={entries} />
+        <div className="container dashboard-shell">
         {error && <p className="error page-error">{error}</p>}
         <div className="dashboard-grid">
           <section className="editor-panel">
