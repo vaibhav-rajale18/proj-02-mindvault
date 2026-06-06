@@ -4,7 +4,6 @@ import Sidebar from "../components/Sidebar";
 import LogForm from "../components/LogForm";
 import LogList from "../components/LogList";
 import Streak from "../components/Streak";
-import StatsPanel from "../components/StatsPanel";
 import { moodMap } from "../utils/journal";
 import { useEntries } from "../hooks/useEntries";
 import { formatCreatedAt, formatDateOnly } from "../utils/date";
@@ -256,7 +255,6 @@ const Dashboard = () => {
               </div>
 
               <div className="entries-panel-controls">
-                <StatsPanel entries={entries} />
                 <div className="search-box">
                   <label htmlFor="search">Search Logs</label>
                   <input
