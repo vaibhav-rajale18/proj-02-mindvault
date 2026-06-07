@@ -6,7 +6,7 @@ MindVault is a full-stack personal journaling and memory management platform bui
 
 ## 🌟 Live Demo
 
-**Frontend:** mindvault-2ihjcvk36-vaibhav-rajales-projects.vercel.app
+**Frontend:**  https://mindvault-lime.vercel.app/
 
 **Backend API:** https://proj-02-mindvault.onrender.com
 
