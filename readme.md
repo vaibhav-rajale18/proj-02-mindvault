@@ -14,7 +14,7 @@ MindVault is a full-stack personal journaling and memory management platform bui
 
 ## 📖 Project Overview
 
-MindVault was built to serve as a personal memory operating system where users can securely record journal entries, track emotional patterns, organize thoughts, and build a consistent writing habit.
+MindVault was built to serve as a personal  journal/logs writing system where users can securely record journal entries, track emotional patterns, organize thoughts, and build a consistent writing habit.
 
 The application combines authentication, journaling, mood tracking, tagging, analytics, and streak management into a single productivity-focused platform.
 
